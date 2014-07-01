@@ -34,24 +34,14 @@ class StreamControllerTest extends WebTestCase
         $this->assertEquals(0, strlen($response2->getContent()));
     }
 
-    /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
+
     public function testNotFound()
     {
         $client = static::createClient();
 
         $client->request('GET', '/mock/rss/not-found');
-    }
-
-    /**
-     * @expectedException \Exception
-     */
-    public function testBadProvider()
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/bad/provider');
+        $response = $client->getResponse();
+        $this->assertEquals('404', $response->getStatusCode());
     }
 
 }
