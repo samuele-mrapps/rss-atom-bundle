@@ -24,7 +24,7 @@ class HttpGuzzle3DriverTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        if (! class_exists('Guzzle\Http\Client') ) {
+        if (! class_exists('\Guzzle\Http\Client') ) {
             $this->markTestSkipped('Guzzle 3 is not installed');
         }
         $this->object = new HttpGuzzle3Driver(

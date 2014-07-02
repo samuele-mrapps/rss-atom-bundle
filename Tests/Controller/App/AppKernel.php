@@ -13,6 +13,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // Dependencies
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
             // My Bundle to test
             new Debril\RssAtomBundle\DebrilRssAtomBundle(),
         );
