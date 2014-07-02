@@ -22,6 +22,9 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('debril_rss_atom');
         $rootNode
                 ->children()
+                ->enumNode('http_client')
+                ->values(array('debril.http.curl', 'debril.http.guzzle3'))
+                ->end()
                 ->arrayNode('date_formats')
                 ->prototype('scalar')->end()
                 ->end();

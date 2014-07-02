@@ -26,6 +26,29 @@ class DebrilRssAtomExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
+        $this->setDateFormatParameter($container, $config);
+        $this->setHttClient($container, $config);
+    }
+
+    protected function setHttClient(ContainerBuilder $container, array $config)
+    {
+        $default = 'debril.http.curl';
+
+        $container->setParameter(
+            'debril.http.client',
+            isset($config['http_client']) ? $config['http_client']:$default
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array $config
+     * @return $this
+     */
+    protected function setDateFormatParameter(ContainerBuilder $container, array $config)
+    {
         $default = array(
             \DateTime::RFC3339,
             \DateTime::RSS,
@@ -34,17 +57,13 @@ class DebrilRssAtomExtension extends Extension
             'Y-m-d',
         );
 
-        if (!isset($config['date_formats']))
-        {
-            $container->setParameter(
-                    'debril_rss_atom.date_formats', $default
-            );
-        } else
-        {
-            $container->setParameter(
-                    'debril_rss_atom.date_formats', array_merge($default, $config['date_formats'])
-            );
-        }
-    }
+        $container->setParameter(
+            'debril_rss_atom.date_formats',
+            isset($config['date_formats'])
+                ? array_merge($default, $config['date_formats'])
+                : $default
+        );
 
+        return $this;
+    }
 }

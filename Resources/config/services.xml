@@ -4,6 +4,9 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <imports>
+        <import resource="guzzle3.xml"/>
+    </imports>
     <parameters>
         <parameter key="debril.parser.rss.class">Debril\RssAtomBundle\Protocol\Parser\RssParser</parameter>
         <parameter key="debril.parser.rdf.class">Debril\RssAtomBundle\Protocol\Parser\RdfParser</parameter>
@@ -47,7 +50,7 @@
         </service>
 
         <service id="debril.reader" class="%debril.reader.class%">
-            <argument type="service" id="debril.http.curl"/>
+            <argument type="service" id="%debril.http.client%" />
             <argument type="service" id="debril.parser.factory"/>
             <call method="addParser">
                 <argument type="service" id="debril.parser.rss" />

@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="guzzle3.user.agent">
+            Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5
+        </parameter>
+        <parameter key="guzzle3.client.class">Guzzle\Http\Client</parameter>
+        <parameter key="guzzle3.logger.class">Guzzle\Plugin\Log\LogPlugin</parameter>
+        <parameter key="guzzle3.log.formatter.class">Guzzle\Log\MessageFormatter</parameter>
+        <parameter key="guzzle3.log.adapter.class">Guzzle\Log\PsrLogAdapter</parameter>
+        <parameter key="debril.http.guzzle3.class">Debril\RssAtomBundle\Driver\HttpGuzzle3Driver</parameter>
+    </parameters>
+
+    <services>
+        <service id="debril.http.guzzle3" class="%debril.http.guzzle3.class%">
+            <argument type="service" id="guzzle3.client"/>
+        </service>
+        <service id="guzzle3.client" class="%guzzle3.client.class%">
+            <call method="addSubscriber">
+                <argument type="service" id="guzzle3.logger" />
+            </call>
+            <call method="setUserAgent">
+                <argument>%guzzle3.user.agent%</argument>
+            </call>
+        </service>
+
+        <service id="guzzle3.logger" class="%guzzle3.logger.class%">
+            <argument type="service" id="guzzle3.log.adapter" />
+            <argument type="service" id="guzzle3.log.formatter" />
+        </service>
+
+        <service id="guzzle3.log.adapter" class="%guzzle3.log.adapter.class%">
+            <argument type="service" id="logger" />
+        </service>
+
+        <service id="guzzle3.log.formatter" class="%guzzle3.log.formatter.class%">
+
+        </service>
+    </services>
+
+</container>
