@@ -68,6 +68,8 @@ class RdfParser extends Parser
             $date = $xmlElement->children('dc', true);
             $format = !is_null($format) ? $format : $this->guessDateFormat($date[0]);
 
+            $item->setXmlElement($xmlElement);
+            
             $item->setTitle($xmlElement->title)
                     ->setDescription($xmlElement->description)
                     ->setUpdated(self::convertToDateTime($date[0], $format))

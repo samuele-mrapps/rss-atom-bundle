@@ -72,6 +72,12 @@ class Item implements ItemIn, ItemOut
      * @var string
      */
     protected $comment;
+    
+     /**
+     * SimpleXmElement  : for access to no-standard xml tags
+     * @var string
+     */
+    protected $xmlElement;
 
     /**
      * Atom : feed.entry.title <feed><entry><title>
@@ -249,6 +255,26 @@ class Item implements ItemIn, ItemOut
     public function setComment($comment)
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+    
+    
+    /**
+     * @return SimpleXmlElement
+     */
+    public function getXmlElement()
+    {
+        return $this->xmlElement;
+    }
+
+    /**
+     * @param SimpleXmlElement $xmlElement
+     * @return \Debril\RssAtomBundle\Protocol\Parser\Item
+     */
+    public function setXmlElement($xmlElement)
+    {
+        $this->xmlElement = $xmlElement;
 
         return $this;
     }

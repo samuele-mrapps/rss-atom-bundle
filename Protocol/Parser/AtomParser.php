@@ -60,6 +60,9 @@ class AtomParser extends Parser
             $itemFormat = isset($itemFormat) ? $itemFormat : $this->guessDateFormat($xmlElement->updated);
 
             $item = $this->newItem();
+            
+            $item->setXmlElement($xmlElement);
+            
             $item->setTitle($xmlElement->title)
                     ->setPublicId($xmlElement->id)
                     ->setSummary($xmlElement->summary)

@@ -64,6 +64,9 @@ class RssParser extends Parser
                 $format = isset($format) ? $format : $this->guessDateFormat($xmlElement->pubDate);
                 $date = self::convertToDateTime($xmlElement->pubDate, $format);
             }
+            
+            $item->setXmlElement($xmlElement);
+            
             $item->setTitle($xmlElement->title)
                     ->setDescription($xmlElement->description)
                     ->setPublicId($xmlElement->guid)
