@@ -7,7 +7,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/alexdebril/rss-atom-bundle.git"
+            "url": "git@github.com:samuele-mrapps/rss-atom-bundle.git"
         }
     ],
     "require": {
