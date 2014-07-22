@@ -12,8 +12,7 @@
 
 namespace Debril\RssAtomBundle\Driver;
 
-class HttpCurlDriver implements HttpDriver
-{
+class HttpCurlDriver implements HttpDriver {
 
     /**
      *
@@ -22,19 +21,21 @@ class HttpCurlDriver implements HttpDriver
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      * @throws DriverUnreachableResourceException
      */
-    public function getResponse($url, \DateTime $lastModified)
-    {
+    public function getResponse($url, \DateTime $lastModified) {
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_TIMECONDITION, CURL_TIMECOND_IFMODSINCE);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+        curl_setopt($curl, CURL_HTTP_VERSION_1_1, true);
+        curl_setopt($curl, CURLOPT_ENCODING, "gzip, deflate");
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3");
         curl_setopt($curl, CURLOPT_TIMEVALUE, $lastModified->getTimestamp());
-        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+
+
         $curlReturn = curl_exec($curl);
 
-        if (!$curlReturn)
-        {
+        if (!$curlReturn) {
             $err = curl_error($curl);
             throw new DriverUnreachableResourceException("Error accessing {$url} : {$err}");
         }
@@ -53,8 +54,7 @@ class HttpCurlDriver implements HttpDriver
      * @param string $body
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      */
-    public function getHttpResponse($headerString, $body)
-    {
+    public function getHttpResponse($headerString, $body) {
         $headers = array();
         preg_match('/(?<version>\S+) (?P<code>\d+) (?P<message>\V+)/', $headerString, $headers);
 
