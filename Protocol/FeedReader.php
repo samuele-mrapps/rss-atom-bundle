@@ -56,8 +56,7 @@ use Debril\RssAtomBundle\Exception\FeedForbiddenException;
  * </code>
  *
  */
-class FeedReader
-{
+class FeedReader {
 
     /**
      * @var array[\Debril\RssAtomBundle\Protocol\Parser]
@@ -78,8 +77,7 @@ class FeedReader
      * @param \Debril\RssAtomBundle\Driver\HttpDriver $driver
      * @param \Debril\RssAtomBundle\Protocol\Parser\Factory $factory
      */
-    public function __construct(HttpDriver $driver, Factory $factory)
-    {
+    public function __construct(HttpDriver $driver, Factory $factory) {
         $this->driver = $driver;
         $this->factory = $factory;
     }
@@ -89,8 +87,7 @@ class FeedReader
      * @param \Debril\RssAtomBundle\Protocol\Parser $parser
      * @return \Debril\RssAtomBundle\Protocol\FeedReader
      */
-    public function addParser(Parser $parser)
-    {
+    public function addParser(Parser $parser) {
         $parser->setFactory($this->factory);
         $this->parsers[] = $parser;
 
@@ -100,8 +97,7 @@ class FeedReader
     /**
      * @return \Debril\RssAtomBundle\Driver\HttpDriver
      */
-    public function getDriver()
-    {
+    public function getDriver() {
         return $this->driver;
     }
 
@@ -113,16 +109,13 @@ class FeedReader
      * @param \DateTime $arg
      * @return \Debril\RssAtomBundle\Protocol\FeedIn
      */
-    public function getFeedContent($url, $arg = null)
-    {
-        if (is_numeric($arg))
-        {
+    public function getFeedContent($url, $arg = null) {
+        if (is_numeric($arg)) {
             return $this->getFilteredContent($url, array(
                         new Filter\Limit($arg)
             ));
         }
-        if ($arg instanceof \DateTime)
-        {
+        if ($arg instanceof \DateTime) {
             return $this->getFeedContentSince($url, $arg);
         }
 
@@ -135,8 +128,7 @@ class FeedReader
      * @param \DateTime $modifiedSince
      * @return FeedIn
      */
-    public function getFilteredContent($url, array $filters, \DateTime $modifiedSince = null)
-    {
+    public function getFilteredContent($url, array $filters, \DateTime $modifiedSince = null) {
         $response = $this->getResponse($url, $modifiedSince);
 
         return $this->parseBody($response, $this->factory->newFeed(), $filters);
@@ -148,8 +140,7 @@ class FeedReader
      * @param \DateTime $modifiedSince
      * @return FeedIn
      */
-    public function getFeedContentSince($url, \DateTime $modifiedSince)
-    {
+    public function getFeedContentSince($url, \DateTime $modifiedSince) {
         $filters = array(
             new Filter\ModifiedSince($modifiedSince)
         );
@@ -164,8 +155,7 @@ class FeedReader
      * @param \DateTime $modifiedSince
      * @return \Debril\RssAtomBundle\Protocol\FeedIn
      */
-    public function readFeed($url, FeedIn $feed, \DateTime $modifiedSince)
-    {
+    public function readFeed($url, FeedIn $feed, \DateTime $modifiedSince) {
         $response = $this->getResponse($url, $modifiedSince);
 
         $filters = array(
@@ -182,10 +172,8 @@ class FeedReader
      * @param \Datetime $modifiedSince
      * @return HttpDriverResponse
      */
-    public function getResponse($url, \Datetime $modifiedSince = null)
-    {
-        if (is_null($modifiedSince))
-        {
+    public function getResponse($url, \Datetime $modifiedSince = null) {
+        if (is_null($modifiedSince)) {
             $modifiedSince = new \DateTime('@0');
         }
 
@@ -204,18 +192,15 @@ class FeedReader
      * @throws FeedForbiddenException
      * @throws FeedCannotBeReadException
      */
-    public function parseBody(HttpDriverResponse $response, FeedIn $feed, array $filters = array())
-    {
-        if ($response->getHttpCodeIsOk())
-        {
+    public function parseBody(HttpDriverResponse $response, FeedIn $feed, array $filters = array()) {
+        if ($response->getHttpCodeIsOk() || $response->getHttpCodeIsRedirection()) {
             $xmlBody = new SimpleXMLElement($response->getBody());
             $parser = $this->getAccurateParser($xmlBody);
 
             return $parser->parse($xmlBody, $feed, $filters);
         }
 
-        switch ($response->getHttpCode())
-        {
+        switch ($response->getHttpCode()) {
             case HttpDriverResponse::HTTP_CODE_NOT_FOUND :
                 throw new FeedNotFoundException($response->getHttpMessage());
             case HttpDriverResponse::HTTP_CODE_NOT_MODIFIED :
@@ -235,13 +220,10 @@ class FeedReader
      * @throws ParserException
      * @return Parser
      */
-    public function getAccurateParser(SimpleXMLElement $xmlBody)
-    {
+    public function getAccurateParser(SimpleXMLElement $xmlBody) {
 
-        foreach ($this->parsers as $parser)
-        {
-            if ($parser->canHandle($xmlBody))
-            {
+        foreach ($this->parsers as $parser) {
+            if ($parser->canHandle($xmlBody)) {
                 return $parser;
             }
         }

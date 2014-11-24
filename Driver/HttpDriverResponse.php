@@ -12,10 +12,11 @@
 
 namespace Debril\RssAtomBundle\Driver;
 
-class HttpDriverResponse
-{
+class HttpDriverResponse {
 
     const HTTP_CODE_OK = 200;
+    const HTTP_CODE_MOVE_PERMANENTLY = 301;
+    const HTTP_CODE_FOUND = 302;
     const HTTP_CODE_NOT_MODIFIED = 304;
     CONST HTTP_CODE_FORBIDDEN = 403;
     const HTTP_CODE_NOT_FOUND = 404;
@@ -55,17 +56,38 @@ class HttpDriverResponse
      *
      * @return boolean
      */
-    public function getHttpCodeIsOk()
-    {
+    public function getHttpCodeIsOk() {
         return $this->getHttpCode() === self::HTTP_CODE_OK;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHttpCodeIsRedirection() {
+        return in_array(
+                $this->getHttpCode(), array(
+            self::HTTP_CODE_MOVE_PERMANENTLY,
+            self::HTTP_CODE_FOUND
+                )
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHttpCodeIsCached() {
+        return in_array(
+                $this->getHttpCode(), array(
+            self::HTTP_CODE_NOT_MODIFIED
+                )
+        );
     }
 
     /**
      *
      * @return int
      */
-    public function getHttpCode()
-    {
+    public function getHttpCode() {
         return $this->httpCode;
     }
 
@@ -74,8 +96,7 @@ class HttpDriverResponse
      * @param int $httpCode
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      */
-    public function setHttpCode($httpCode)
-    {
+    public function setHttpCode($httpCode) {
         $this->httpCode = (int) $httpCode;
 
         return $this;
@@ -85,8 +106,7 @@ class HttpDriverResponse
      *
      * @return string
      */
-    public function getHttpVersion()
-    {
+    public function getHttpVersion() {
         return $this->httpVersion;
     }
 
@@ -95,8 +115,7 @@ class HttpDriverResponse
      * @param string $httpVersion
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      */
-    public function setHttpVersion($httpVersion)
-    {
+    public function setHttpVersion($httpVersion) {
         $this->httpVersion = $httpVersion;
 
         return $this;
@@ -106,8 +125,7 @@ class HttpDriverResponse
      *
      * @return string
      */
-    public function getHttpMessage()
-    {
+    public function getHttpMessage() {
         return $this->httpMessage;
     }
 
@@ -116,8 +134,7 @@ class HttpDriverResponse
      * @param string $httpMessage
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      */
-    public function setHttpMessage($httpMessage)
-    {
+    public function setHttpMessage($httpMessage) {
         $this->httpMessage = $httpMessage;
 
         return $this;
@@ -127,8 +144,7 @@ class HttpDriverResponse
      *
      * @return string
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
         return $this->headers;
     }
 
@@ -137,8 +153,7 @@ class HttpDriverResponse
      * @param string $headers
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      */
-    public function setHeaders($headers)
-    {
+    public function setHeaders($headers) {
         $this->headers = $headers;
 
         return $this;
@@ -148,8 +163,7 @@ class HttpDriverResponse
      *
      * @return string
      */
-    public function getBody()
-    {
+    public function getBody() {
         return $this->body;
     }
 
@@ -158,8 +172,7 @@ class HttpDriverResponse
      * @param string $body
      * @return HttpDriverResponse
      */
-    public function setBody($body)
-    {
+    public function setBody($body) {
         $this->body = $body;
 
         return $this;
