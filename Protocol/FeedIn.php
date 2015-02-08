@@ -12,10 +12,13 @@
 
 namespace Debril\RssAtomBundle\Protocol;
 
-use Debril\RssAtomBundle\Protocol\ItemIn;
-
 /**
  * interface used when reading an external feed
+ */
+/**
+ * Interface FeedIn
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Protocol
  */
 interface FeedIn
 {
@@ -26,7 +29,6 @@ interface FeedIn
      * @param \Debril\RssAtomBundle\Protocol\ItemIn $item
      */
     public function addItem(ItemIn $item);
-
 
     /**
      * Atom : feed.updated <feed><updated>

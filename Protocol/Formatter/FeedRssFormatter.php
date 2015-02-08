@@ -16,6 +16,11 @@ use Debril\RssAtomBundle\Protocol\FeedFormatter;
 use Debril\RssAtomBundle\Protocol\FeedOut;
 use Debril\RssAtomBundle\Protocol\ItemOut;
 
+/**
+ * Class FeedRssFormatter
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Protocol\Formatter
+ */
 class FeedRssFormatter extends FeedFormatter
 {
 
@@ -39,7 +44,7 @@ class FeedRssFormatter extends FeedFormatter
 
     /**
      * @param \DomDocument $document
-     * @param FeedOut $content
+     * @param FeedOut      $content
      */
     public function setMetas(\DOMDocument $document, FeedOut $content)
     {
@@ -51,8 +56,7 @@ class FeedRssFormatter extends FeedFormatter
         $elements[] = $document->createElement('lastBuildDate', $content->getLastModified()->format(\DateTime::RSS));
         $elements[] = $document->createElement('pubDate', $content->getLastModified()->format(\DateTime::RSS));
 
-        foreach ($elements as $element)
-        {
+        foreach ($elements as $element) {
             $document->documentElement->firstChild->appendChild($element);
         }
     }
@@ -60,7 +64,7 @@ class FeedRssFormatter extends FeedFormatter
     /**
      *
      * @param \DomDocument $document
-     * @param ItemOut $item
+     * @param ItemOut      $item
      */
     protected function addEntry(\DomDocument $document, ItemOut $item)
     {
@@ -75,12 +79,10 @@ class FeedRssFormatter extends FeedFormatter
         $elements[] = $document->createElement('comments', $item->getComment());
         $elements[] = $document->createElement('description', htmlspecialchars($item->getDescription(), ENT_COMPAT, 'UTF-8'));
 
-        if (!is_null($item->getAuthor()))
-        {
+        if (!is_null($item->getAuthor())) {
             $elements[] = $document->createElement('author', $item->getAuthor());
         }
-        foreach ($elements as $element)
-        {
+        foreach ($elements as $element) {
             $entry->appendChild($element);
         }
 

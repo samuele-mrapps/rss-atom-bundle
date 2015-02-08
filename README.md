@@ -14,6 +14,8 @@ RssAtomBundle is a Bundle for Symfony 2 made to easily access and deliver RSS / 
 - multiple feeds writing
 - Ability to use doctrine as a data source
 
+Keep informed about about new releases and incoming features : http://blog.debril.fr/category/rss-atom-bundle
+
 All classes are heavily tested using PHPUnit.
 
 Installation
@@ -30,7 +32,7 @@ Installation in a Symfony 2 project
 This is the most common way if you want to add RssAtomBundle into an existing project.
 Edit composer.json and add the following line in the "require" section:
 
-    "debril/rss-atom-bundle": "~1.3"
+    "debril/rss-atom-bundle": "1.5"
 
 then, ask Composer to install it:
 
@@ -57,7 +59,7 @@ Compatibility between 1.1.6 and 1.2.0
 
 If you are already using rss-atom-bundle, beware that the 1.2.0 version breaks some backward compatibility. If you do not need the improvements provided by the 1.2.0 version, please edit composer.json as below :
 
-    "debril/rss-atom-bundle": "~1.1, <1.2"
+    "debril/rss-atom-bundle": "~1.1.0"
 
 The migration process is described in the [migrations section](https://github.com/alexdebril/rss-atom-bundle/wiki/Migrations)
 

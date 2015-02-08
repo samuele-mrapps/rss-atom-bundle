@@ -12,8 +12,12 @@
 
 namespace Debril\RssAtomBundle\Exception;
 
+/**
+ * Class FeedServerErrorException
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Exception
+ */
 class FeedServerErrorException extends \Exception
 {
 
 }
-

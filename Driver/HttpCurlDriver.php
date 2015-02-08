@@ -12,13 +12,18 @@
 
 namespace Debril\RssAtomBundle\Driver;
 
+/**
+ * Class HttpCurlDriver
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Driver
+ */
 class HttpCurlDriver implements HttpDriver
 {
 
     /**
      *
-     * @param string $url
-     * @param \DateTime $lastModified
+     * @param  string                                          $url
+     * @param  \DateTime                                       $lastModified
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      * @throws DriverUnreachableResourceException
      */
@@ -33,10 +38,11 @@ class HttpCurlDriver implements HttpDriver
         curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
         curl_setopt($curl, CURLOPT_TIMEVALUE, $lastModified->getTimestamp());
         curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
         $curlReturn = curl_exec($curl);
 
-        if (!$curlReturn)
-        {
+        if (!$curlReturn) {
             $err = curl_error($curl);
             throw new DriverUnreachableResourceException("Error accessing {$url} : {$err}");
         }
@@ -51,8 +57,8 @@ class HttpCurlDriver implements HttpDriver
 
     /**
      *
-     * @param string $headerString
-     * @param string $body
+     * @param  string                                          $headerString
+     * @param  string                                          $body
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      */
     public function getHttpResponse($headerString, $body)

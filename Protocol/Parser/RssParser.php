@@ -16,6 +16,11 @@ use Debril\RssAtomBundle\Protocol\FeedInterface;
 use Debril\RssAtomBundle\Protocol\Parser;
 use \SimpleXMLElement;
 
+/**
+ * Class RssParser
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Protocol\Parser
+ */
 class RssParser extends Parser
 {
 
@@ -32,7 +37,7 @@ class RssParser extends Parser
     }
 
     /**
-     * @param SimpleXMLElement $xmlBody
+     * @param  SimpleXMLElement $xmlBody
      * @return boolean
      */
     public function canHandle(SimpleXMLElement $xmlBody)
@@ -42,13 +47,15 @@ class RssParser extends Parser
 
     /**
      *
-     * @param SimpleXMLElement $xmlBody
-     * @param \Debril\RssAtomBundle\Protocol\FeedInterface $feed
-     * @param array $filters
+     * @param  SimpleXMLElement                             $xmlBody
+     * @param  \Debril\RssAtomBundle\Protocol\FeedInterface $feed
+     * @param  array                                        $filters
      * @return \Debril\RssAtomBundle\Protocol\FeedInterface
      */
     protected function parseBody(SimpleXMLElement $xmlBody, FeedInterface $feed, array $filters)
     {
+        $namespaces = $xmlBody->getNamespaces(true);
+
         $feed->setPublicId($xmlBody->channel->link);
         $feed->setLink($xmlBody->channel->link);
         $feed->setTitle($xmlBody->channel->title);
@@ -56,11 +63,9 @@ class RssParser extends Parser
 
         $latest = new \DateTime('@0');
         $date = new \DateTime('now');
-        foreach ($xmlBody->channel->item as $xmlElement)
-        {
+        foreach ($xmlBody->channel->item as $xmlElement) {
             $item = $this->newItem();
-            if ( isset($xmlElement->pubDate) )
-            {
+            if ( isset($xmlElement->pubDate) ) {
                 $format = isset($format) ? $format : $this->guessDateFormat($xmlElement->pubDate);
                 $date = self::convertToDateTime($xmlElement->pubDate, $format);
             }
@@ -68,17 +73,18 @@ class RssParser extends Parser
             $item->setXmlElement($xmlElement);
             
             $item->setTitle($xmlElement->title)
-                    ->setDescription($xmlElement->description)
-                    ->setPublicId($xmlElement->guid)
-                    ->setUpdated($date)
-                    ->setLink($xmlElement->link)
-                    ->setComment($xmlElement->comments)
-                    ->setAuthor($xmlElement->author);
+                 ->setDescription($xmlElement->description)
+                 ->setPublicId($xmlElement->guid)
+                 ->setUpdated($date)
+                 ->setLink($xmlElement->link)
+                 ->setComment($xmlElement->comments)
+                 ->setAuthor($xmlElement->author);
 
-            if ($date > $latest)
-            {
+            if ($date > $latest) {
                 $latest = $date;
             }
+
+            $item->setAdditional($this->getAdditionalNamespacesElements($xmlElement, $namespaces));
 
             $this->addValidItem($feed, $item, $filters);
         }
@@ -90,7 +96,7 @@ class RssParser extends Parser
 
     /**
      * @param SimpleXMLElement $xmlBody
-     * @param FeedInterface $feed
+     * @param FeedInterface    $feed
      * @param $latestItemDate
      */
     protected function detectAndSetLastModified(SimpleXMLElement $xmlBody, FeedInterface $feed, $latestItemDate)
@@ -107,7 +113,7 @@ class RssParser extends Parser
     /**
      *
      * @param \Debril\RssAtomBundle\Protocol\FeedInterface $feed
-     * @param type $rssDate
+     * @param type                                         $rssDate
      */
     protected function setLastModified(FeedInterface $feed, $rssDate)
     {

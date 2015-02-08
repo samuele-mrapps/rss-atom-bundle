@@ -16,6 +16,11 @@ use \DateTime;
 use \Debril\RssAtomBundle\Protocol\ItemIn;
 use \Debril\RssAtomBundle\Protocol\ItemOut;
 
+/**
+ * Class Item
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Protocol\Parser
+ */
 class Item implements ItemIn, ItemOut
 {
 
@@ -80,6 +85,13 @@ class Item implements ItemIn, ItemOut
     protected $xmlElement;
 
     /**
+     * this will take all additional elements from other namespace as array with raw simpleXml
+     * f.e. MediaRss or FeedBurner additions
+     * @var array
+     */
+    protected $additional;
+
+    /**
      * Atom : feed.entry.title <feed><entry><title>
      * Rss  : rss.channel.item.title <rss><channel><item><title>
      * @return string
@@ -92,7 +104,7 @@ class Item implements ItemIn, ItemOut
     /**
      * Atom : feed.entry.title <feed><entry><title>
      * Rss  : rss.channel.item.title <rss><channel><item><title>
-     * @param string $title
+     * @param  string                                     $title
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setTitle($title)
@@ -115,7 +127,7 @@ class Item implements ItemIn, ItemOut
     /**
      * Atom : feed.entry.id <feed><entry><id>
      * Rss  : rss.channel.item.guid <rss><channel><item><guid>
-     * @param string $publicId
+     * @param  string                                     $publicId
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setPublicId($publicId)
@@ -138,7 +150,7 @@ class Item implements ItemIn, ItemOut
     /**
      * Atom : feed.entry.content <feed><entry><content>
      * Rss  : rss.channel.item.description <rss><channel><item><description>
-     * @param string $description
+     * @param  string                                     $description
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setDescription($description)
@@ -159,7 +171,7 @@ class Item implements ItemIn, ItemOut
 
     /**
      * Atom : feed.entry.summary <feed><entry><summary>
-     * @param string $summary
+     * @param  string                                     $summary
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setSummary($summary)
@@ -182,7 +194,7 @@ class Item implements ItemIn, ItemOut
     /**
      * Atom : feed.entry.updated <feed><entry><updated>
      * Rss  : rss.channel.item.pubDate <rss><channel><item><pubDate>
-     * @param \DateTime $updated
+     * @param  \DateTime                                  $updated
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setUpdated(DateTime $updated)
@@ -205,7 +217,7 @@ class Item implements ItemIn, ItemOut
     /**
      * Atom : feed.entry.link <feed><entry><link>
      * Rss  : rss.channel.item.link <rss><channel><item><link>
-     * @param string $link
+     * @param  string                                     $link
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setLink($link)
@@ -228,7 +240,7 @@ class Item implements ItemIn, ItemOut
     /**
      * Atom : feed.entry.author.name <feed><entry><author><name>
      * Rss  : rss.channel.item.author <rss><channel><item><author>
-     * @param string $author
+     * @param  string                                     $author
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setAuthor($author)
@@ -249,7 +261,7 @@ class Item implements ItemIn, ItemOut
 
     /**
      * Rss  : rss.channel.item.comment <rss><channel><item><comment>
-     * @param string $comment
+     * @param  string                                     $comment
      * @return \Debril\RssAtomBundle\Protocol\Parser\Item
      */
     public function setComment($comment)
@@ -277,6 +289,28 @@ class Item implements ItemIn, ItemOut
         $this->xmlElement = $xmlElement;
 
         return $this;
+    }
+
+    /**
+     * this will take all additional elements from other namespace as array with raw simpleXml
+     * f.e. MediaRss or FeedBurner additions
+     *
+     * @param array $additional
+     */
+    public function setAdditional(array $additional)
+    {
+        $this->additional = $additional;
+    }
+
+    /**
+     * this will take all additional elements from other namespace as array with raw simpleXml
+     * f.e. MediaRss or FeedBurner additions
+     *
+     * @return array
+     */
+    public function getAdditional()
+    {
+        return $this->additional;
     }
 
 }

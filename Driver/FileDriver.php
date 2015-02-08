@@ -10,22 +10,24 @@
  */
 namespace Debril\RssAtomBundle\Driver;
 
-use Debril\RssAtomBundle\Driver\DriverUnreachableResourceException;
-
+/**
+ * Class FileDriver
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Driver
+ */
 class FileDriver implements HttpDriver
 {
 
     /**
      *
-     * @param string $url
-     * @param \DateTime $lastModified
+     * @param  string                                          $url
+     * @param  \DateTime                                       $lastModified
      * @return \Debril\RssAtomBundle\Driver\HttpDriverResponse
      * @throws DriverUnreachableResourceException
      */
     public function getResponse($url, \DateTime $lastModified)
     {
-        if ( !is_readable($url) )
-        {
+        if ( !is_readable($url) ) {
             throw new DriverUnreachableResourceException("not found or not readable : {$url}");
         }
 

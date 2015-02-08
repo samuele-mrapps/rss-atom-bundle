@@ -37,8 +37,8 @@ class StreamController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $options = $this->buildOptions($request);
-        $options->set('Since', $this->getModifiedSince());
+        $options = $request->attributes->get('_route_params');
+        $options['Since'] = $this->getModifiedSince();
 
         return $this->createStreamResponse(
                         $options, $request->get('format', 'rss'), $request->get('source', self::DEFAULT_SOURCE)
@@ -51,15 +51,12 @@ class StreamController extends Controller
      */
     public function getModifiedSince()
     {
-        if (is_null($this->since))
-        {
-            if ($this->getRequest()->headers->has('If-Modified-Since'))
-            {
+        if (is_null($this->since)) {
+            if ($this->getRequest()->headers->has('If-Modified-Since')) {
                 $string = $this->getRequest()->headers->get('If-Modified-Since');
                 $this->since = \DateTime::createFromFormat(\DateTime::RSS, $string);
-            } else
-            {
-                $this->since = new \DateTime;
+            } else {
+                $this->since = new \DateTime();
                 $this->since->setTimestamp(1);
             }
         }
@@ -72,15 +69,17 @@ class StreamController extends Controller
      * 200 : a full body containing the stream
      * 304 : Not modified
      *
-     * @param \Symfony\Component\OptionsResolver\Options $options
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  array      $options
+     * @param $format
+     * @param  string     $source
+     * @return Response
+     * @throws \Exception
      */
-    public function createStreamResponse(Options $options, $format, $source = self::DEFAULT_SOURCE)
+    public function createStreamResponse(array $options, $format, $source = self::DEFAULT_SOURCE)
     {
         $content = $this->getContent($options, $source);
 
-        if ($this->mustForceRefresh() || $content->getLastModified() > $this->getModifiedSince())
-        {
+        if ($this->mustForceRefresh() || $content->getLastModified() > $this->getModifiedSince()) {
             $formatter = $this->getFormatter($format);
             $response = new Response($formatter->toString($content));
             $response->headers->set('Content-Type', 'application/xhtml+xml');
@@ -88,9 +87,8 @@ class StreamController extends Controller
             $response->setPublic();
             $response->setMaxAge(3600);
             $response->setLastModified($content->getLastModified());
-        } else
-        {
-            $response = new Response;
+        } else {
+            $response = new Response();
             $response->setNotModified();
         }
 
@@ -102,43 +100,24 @@ class StreamController extends Controller
      * The FeedContentProvider instance is provided as a service
      * default : debril.provider.service
      *
-     * @param \Symfony\Component\OptionsResolver\Options $options
-     * @param string $source
+     * @param  \Symfony\Component\OptionsResolver\Options $options
+     * @param  string                                     $source
      * @return \Debril\RssAtomBundle\Protocol\FeedOut
      * @throws \Exception
      */
-    protected function getContent(Options $options, $source)
+    protected function getContent(array $options, $source)
     {
         $provider = $this->get($source);
 
-        if (!$provider instanceof FeedContentProvider)
-        {
+        if (!$provider instanceof FeedContentProvider) {
             throw new \Exception('Provider is not a FeedContentProvider instance');
         }
 
-        try
-        {
+        try {
             return $provider->getFeedContent($options);
-        } catch (FeedNotFoundException $e)
-        {
+        } catch (FeedNotFoundException $e) {
             throw $this->createNotFoundException('feed not found');
         }
-    }
-
-    /**
-     * Build an Options object using parameters coming from the route
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\OptionsResolver\Options
-     */
-    protected function buildOptions(Request $request)
-    {
-        $options = new Options;
-        $routeParams = $request->attributes->get('_route_params');
-        foreach ($routeParams as $key => $value)
-            $options->set($key, $value);
-
-        return $options;
     }
 
     /**
@@ -157,7 +136,7 @@ class StreamController extends Controller
     /**
      * Get the accurate formatter
      *
-     * @param  string $format
+     * @param  string                                       $format
      * @throws \Exception
      * @return \Debril\RssAtomBundle\Protocol\FeedFormatter
      */

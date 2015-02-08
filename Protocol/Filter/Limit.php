@@ -9,6 +9,11 @@
 
 namespace Debril\RssAtomBundle\Protocol\Filter;
 
+/**
+ * Class Limit
+ * @deprecated will be removed in version 2.0
+ * @package Debril\RssAtomBundle\Protocol\Filter
+ */
 class Limit implements \Debril\RssAtomBundle\Protocol\Filter
 {
 
@@ -25,13 +30,13 @@ class Limit implements \Debril\RssAtomBundle\Protocol\Filter
     /**
      * @param $limit
      */
-    function __construct($limit)
+    public function __construct($limit)
     {
         $this->limit = $limit;
     }
 
     /**
-     * @param \Debril\RssAtomBundle\Protocol\Parser\Item $item
+     * @param  \Debril\RssAtomBundle\Protocol\Parser\Item $item
      * @return boolean
      */
     public function isValid(\Debril\RssAtomBundle\Protocol\Parser\Item $item)
