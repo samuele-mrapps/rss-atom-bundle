@@ -37,6 +37,7 @@ class HttpCurlDriver implements HttpDriver
         curl_setopt($curl, CURLOPT_TIMECONDITION, CURL_TIMECOND_IFMODSINCE);
         curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
         curl_setopt($curl, CURLOPT_TIMEVALUE, $lastModified->getTimestamp());
+        curl_setopt($curl, CURLOPT_ENCODING, 'gzip, deflate');
         curl_setopt($curl, CURLOPT_TIMEOUT, 10);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
